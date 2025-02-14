@@ -168,16 +168,11 @@ class HomePageState extends State<HomePage> {
             // ปุ่มยกเลิก
             TextButton(
               onPressed: () {
-                // เคลียร์ข้อมูลและปิด Popup
-                studentIdController.clear();
-                nameController.clear();
-                lastnameController.clear();
-                yearOfStudyController.clear();
-                majorController.clear();
                 Navigator.of(context).pop();
               },
               child: const Text('Cancel'),
             ),
+
             // ปุ่มบันทึก
             ElevatedButton.icon(
               icon: const Icon(Icons.save),
