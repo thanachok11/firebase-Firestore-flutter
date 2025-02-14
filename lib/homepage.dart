@@ -14,6 +14,7 @@ class HomePageState extends State<HomePage> {
   final TextEditingController lastnameController = TextEditingController();
   final TextEditingController yearOfStudyController = TextEditingController();
   final TextEditingController majorController = TextEditingController();
+  final TextEditingController studentIdController = TextEditingController();
 
   final CollectionReference users =
       FirebaseFirestore.instance.collection('students');
@@ -112,6 +113,29 @@ class HomePageState extends State<HomePage> {
                   keyboardType: TextInputType.number,
                 ),
                 const SizedBox(height: 16),
+                TextField(
+                  controller: studentIdController,
+                  decoration: InputDecoration(
+                    labelText: 'Enter Student ID',
+                    labelStyle: const TextStyle(
+                      fontSize: 16,
+                      color: Colors.blueAccent,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    filled: true,
+                    fillColor: Colors.blue[50], // Light blue background
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide.none, // Remove border
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide:
+                          const BorderSide(color: Colors.blueAccent, width: 2),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
 
                 // สาขาที่ศึกษา (TextField)
                 TextField(
@@ -145,6 +169,7 @@ class HomePageState extends State<HomePage> {
             TextButton(
               onPressed: () {
                 // เคลียร์ข้อมูลและปิด Popup
+                studentIdController.clear();
                 nameController.clear();
                 lastnameController.clear();
                 yearOfStudyController.clear();
@@ -165,6 +190,7 @@ class HomePageState extends State<HomePage> {
                   // ถ้าเป็นการแก้ไขข้อมูล
                   if (student != null) {
                     await users.doc(student.id).update({
+                      'student_id': studentIdController.text,
                       'name': nameController.text,
                       'lastname': lastnameController.text,
                       'year_of_study': yearOfStudyController.text,
@@ -173,6 +199,7 @@ class HomePageState extends State<HomePage> {
                   } else {
                     // ถ้าเป็นการเพิ่มข้อมูลใหม่
                     await users.add({
+                      'student_id': studentIdController.text,
                       'name': nameController.text,
                       'lastname': lastnameController.text,
                       'year_of_study': yearOfStudyController.text,
@@ -187,6 +214,22 @@ class HomePageState extends State<HomePage> {
                     yearOfStudyController.clear();
                     majorController.clear();
                   }
+
+                  // ปิด Popup
+                  Navigator.of(context).pop();
+
+                  // แสดงข้อความแจ้งเตือน "Update data success"
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Update Data Success'),
+                      backgroundColor: Colors.green,
+                    ),
+                  );
+
+                  // รีเฟรชหน้าหลักหลังจากเพิ่มหรือแก้ไขข้อมูล
+                  setState(() {
+                    // ทำให้ UI รีเฟรช
+                  });
                 }
               },
             ),
@@ -310,7 +353,7 @@ class HomePageState extends State<HomePage> {
                                       fontWeight: FontWeight.bold),
                                 ),
                                 subtitle: Text(
-                                    '🎓 Year: ${data['year_of_study']} | Major: ${data['major']}'),
+                                    '🎓 Student ID: ${data['student_id']} | Year: ${data['year_of_study']} | Major: ${data['major']}'),
                                 trailing: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
