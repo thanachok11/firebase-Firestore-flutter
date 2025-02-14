@@ -1,1 +1,3 @@
-# firebase-Firestore-flutter
+# firebaes_firestore
+
+A new Flutter project.
